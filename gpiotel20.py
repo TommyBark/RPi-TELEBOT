@@ -95,7 +95,7 @@ def handle(msg):
         p = subprocess.Popen("lsusb", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
         bot.sendMessage(chat_id, p.decode('utf-8'))
     elif command == "/ip":
-        subprocess.Popen("hostname -I", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
+        p = subprocess.Popen("hostname -I", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
         bot.sendMessage(chat_id, p.decode('utf-8'))
 # Enter your telegram token below
 load_dotenv()
