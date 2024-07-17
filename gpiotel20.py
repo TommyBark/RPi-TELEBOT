@@ -93,7 +93,7 @@ def handle(msg):
         bot.sendMessage(chat_id, p.decode('utf-8'))
     elif command == '/usb':
         p = subprocess.Popen("lsusb", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
-        bot.sendMessage(chat_id, str(p))
+        bot.sendMessage(chat_id, p.decode('utf-8'))
 # Enter your telegram token below
 load_dotenv()
 bot = telepot.Bot(os.getenv("TELEGRAM_API_TOKEN"))
