@@ -37,7 +37,7 @@ GPIO.setup(led2, GPIO.OUT) # Declaring the output pin
 now = datetime.datetime.now() 
 temp_warning_cooldown = 3 * 60
 temp_threshold = 75.0
-CHAT_ID = os.getenv("CHAT_ID")
+CHAT_ID = int(os.getenv("CHAT_ID"))
 
 
 def handle(msg):
@@ -49,6 +49,7 @@ def handle(msg):
     print(command)
     if chat_id != CHAT_ID:
         if chat_id not in past_chat_ids:
+            print(chat_id)
             bot.sendMessage(CHAT_ID, f"Received a message from someone else than you! Message: {command}")
             past_chat_ids.append(chat_id)
     else:
