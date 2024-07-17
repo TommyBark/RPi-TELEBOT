@@ -33,12 +33,20 @@ GPIO.setup(led1, GPIO.OUT) # Declaring the output pin
 GPIO.setup(led2, GPIO.OUT) # Declaring the output pin
 
 now = datetime.datetime.now() 
+temp_warning_cooldown = 3 * 60
+temp_threshold = 75.0
+CHAT_ID = 1437578017
+
 
 def handle(msg):
     chat_id = msg['chat']['id'] # Receiving the message from telegram
     command = msg['text']   # Getting text from the message
+
     print ('Incoming...')
     print(command)
+    if chat_id != CHAT_ID:
+        bot.sendMessage(CHAT_ID, "Received a message from someone else than you!")
+        raise ValueError
     cpu = CPUTemperature()
     temp = cpu.temperature
     # Comparing the incoming message to send a reply according to it
@@ -96,4 +104,8 @@ MessageLoop(bot, handle).run_as_thread()
 print ('GPIOTEL 2.00 at your service...')
 
 while 1:
+    cpu_temp = CPUTemperature()
+    if cpu_temp > temp_threshold:
+        bot.sendMessage(CHAT_ID, f"Temperature Reached {cpu_temp}C !!!")
+        sleep(temp_warning_cooldown)
     sleep(10)
