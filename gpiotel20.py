@@ -102,6 +102,10 @@ def handle(msg):
         elif command == "/ip":
             p = subprocess.Popen("hostname -I", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
             bot.sendMessage(chat_id, p.decode('utf-8'))
+        elif command == "/sysinfo":
+            cmd = """echo "CPU `LC_ALL=C top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}'`% RAM `free -m | awk '/Mem:/ { printf("%3.1f%%", $3/$2*100) }'` HDD `df -h / | awk '/\// {print $(NF-1)}'`" """
+            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
+            bot.sendMessage(chat_id, p.decode('utf-8'))
 # Enter your telegram token below
 bot = telepot.Bot(os.getenv("TELEGRAM_API_TOKEN"))
 print(bot.getMe())
