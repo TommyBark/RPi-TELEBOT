@@ -104,7 +104,7 @@ MessageLoop(bot, handle).run_as_thread()
 print ('GPIOTEL 2.00 at your service...')
 
 while 1:
-    cpu_temp = CPUTemperature()
+    cpu_temp = CPUTemperature().temperature
     if cpu_temp > temp_threshold:
         bot.sendMessage(CHAT_ID, f"Temperature Reached {cpu_temp}C !!!")
         sleep(temp_warning_cooldown)
