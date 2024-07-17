@@ -8,12 +8,26 @@ import datetime
 import telepot  
 import subprocess
 from telepot.loop import MessageLoop
-import RPi.GPIO as GPIO   
+#import RPi.GPIO as GPIO   
 from time import sleep      
 from gpiozero import CPUTemperature
+from dotenv import load_dotenv
+import os
 led1 = 5  #Set the GPIO pin number of LED 1
 led2 = 10 #Set the GPIO pin number of LED 2       
 
+class GPIO_template:
+    def __init__(self):
+        self.BCM = None
+        self.OUT = None
+    def output(self, a,b):
+        return None
+    def setmode(self,a):
+        return None
+    def setup(self, a,b):
+        return None
+
+GPIO = GPIO_template()
 GPIO.setmode(GPIO.BCM)     
 GPIO.setup(led1, GPIO.OUT) # Declaring the output pin
 GPIO.setup(led2, GPIO.OUT) # Declaring the output pin
@@ -49,7 +63,7 @@ def handle(msg):
         bot.sendMessage(chat_id, str("LED 2 is OFF"))
         GPIO.output(led2, False)
     elif command == '/temp':
-        bot.sendMessage(chat_id, str("CPU temp. : ") + str(temp))
+        bot.sendMessage(chat_id, str("CPU temp. : ") + str(temp) + "C")
     elif command == '/repoupdate':
         bot.sendMessage(chat_id, str("Updating repos..."))
         p = subprocess.Popen("apt-get update", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
@@ -68,12 +82,13 @@ def handle(msg):
         subprocess.call('sudo reboot', shell=True)
     elif command == '/cpu':
         p = subprocess.Popen("lscpu", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
-        bot.sendMessage(chat_id, str(p))
+        bot.sendMessage(chat_id, p.decode('utf-8'))
     elif command == '/usb':
         p = subprocess.Popen("lsusb", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
         bot.sendMessage(chat_id, str(p))
 # Enter your telegram token below
-bot = telepot.Bot('Enter your Telegram bot API token here')
+load_dotenv()
+bot = telepot.Bot(os.getenv("TELEGRAM_API_TOKEN"))
 print (bot.getMe())
 
 # Start listening to the telegram bot and whenever a message is  received, the handle function will be called.
